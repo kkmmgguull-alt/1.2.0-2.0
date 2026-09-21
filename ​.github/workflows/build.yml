@@ -1,0 +1,24 @@
+pojavhud/
+├── .github/
+│   └── workflows/
+│       └── build.yml
+├── src/
+│   └── main/
+│       ├── java/
+│       │   └── com/
+│       │       └── pojavhud/
+│       │           ├── PojavHudClient.java
+│       │           ├── HudConfig.java
+│       │           ├── HudRenderer.java
+│       │           ├── EditorScreen.java
+│       │           └── ModMenuIntegration.java
+│       └── resources/
+│           ├── assets/
+│           │   └── pojavhud/
+│           │       ├── icon.png
+│           │       └── lang/
+│           │           └── en_us.json
+│           └── fabric.mod.json
+├── build.gradle
+├── gradle.properties
+└── settings.gradle
