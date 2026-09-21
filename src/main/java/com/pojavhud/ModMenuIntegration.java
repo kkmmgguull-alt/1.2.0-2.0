@@ -1,52 +1,34 @@
-package com.pojavhud;
+name: Build PojavHUD 1.2.0
 
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import org.lwjgl.glfw.GLFW;
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
 
-public class PojavHudClient implements ClientModInitializer {
-    public static HudConfig config;
-    private static KeyBinding toggleKey;
-    private static KeyBinding editorKey;
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    @Override
-    public void onInitializeClient() {
-        toggleKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.pojavhud.toggle",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_N,
-                "category.pojavhud"
-        ));
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
 
-        editorKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.pojavhud.editor",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_O,
-                "category.pojavhud"
-        ));
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (toggleKey.wasPressed()) {
-                if (config != null) {
-                    config.visible = !config.visible;
-                    config.save();
-                }
-            }
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
-            while (editorKey.wasPressed()) {
-                if (client.currentScreen == null) {
-                    if (config == null) {
-                        config = HudConfig.load(client.getWindow().getScaledWidth(), client.getWindow().getScaledHeight());
-                    }
-                    client.setScreen(new EditorScreen(null));
-                }
-            }
-        });
+      - name: Build with Gradle
+        run: ./gradlew build
 
-        HudRenderCallback.EVENT.register(HudRenderer::render);
-    }
-}
+      - name: Upload Jar Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PojavHUD-1.2.0-Fabric-1.21.1
+          path: build/libs/pojavhud-1.2.0.jar
