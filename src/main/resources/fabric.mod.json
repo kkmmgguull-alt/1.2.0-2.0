@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "pojavhud",
+  "version": "1.2.0",
+  "name": "PojavHUD",
+  "description": "Visual hotbar item overlay designed for touch control layouts.",
+  "authors": ["PojavHUD Team"],
+  "icon": "assets/pojavhud/icon.png",
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.pojavhud.PojavHudClient"
+    ],
+    "modmenu": [
+      "com.pojavhud.ModMenuIntegration"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
